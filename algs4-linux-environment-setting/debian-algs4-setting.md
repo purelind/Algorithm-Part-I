@@ -51,21 +51,21 @@ Install the Java Platform, Standard Edition Development Kit (JDK 8), either from
 
 ## 1.   Install a Programming Environment ##
 
- - Create a directory /usr/local/algs4. 创建目录 /usr/local/algs4
- 
+
+  Create a directory /usr/local/algs4. 创建目录 /usr/local/algs4
 
     [username:~/] cd /usr/local
     [username:/usr/local] sudo mkdir algs4
     [username:/usr/local] sudo chmod 755 algs4
 
- - Navigate to the subdirectory /usr/local/algs4. 转到 /usr/local/algs4目录下
+ Navigate to the subdirectory /usr/local/algs4. 转到 /usr/local/algs4目录下
  
 
     [username:/usr/local] cd algs4
     [username:/usr/local/algs4] pwd
     /usr/local/algs4
 
- - Download the textbook libraries from algs4.jar and the Java wrapper scripts from javac-algs4 and java-algs4. 下载库文件algs4.jar 和javac-algs4、java-algs4 俩个scripts,这样以后在Terminal下就能愉快的 javac-algs4 helloworld.java 和 java-algs4 helloworld.
+ Download the textbook libraries from algs4.jar and the Java wrapper scripts from javac-algs4 and java-algs4. 下载库文件algs4.jar 和javac-algs4、java-algs4 俩个scripts,这样以后在Terminal下就能愉快的 javac-algs4 helloworld.java 和 java-algs4 helloworld.
  
  
 
@@ -75,8 +75,7 @@ Install the Java Platform, Standard Edition Development Kit (JDK 8), either from
     [username:/usr/local/algs4] sudo chmod 755 javac-algs4 java-algs4
     [username:/usr/local/algs4] sudo mv javac-algs4 /usr/local/bin
     [username:/usr/local/algs4] sudo mv java-algs4 /usr/local/bin
-
- - Download DrJava from drjava.jar, the wrapper script from drjava, and the configuration file from .drjava.下载drjava,这是一个Java开发环境
+ Download DrJava from drjava.jar, the wrapper script from drjava, and the configuration file from .drjava.下载drjava,这是一个Java开发环境
  
 
     [username:/usr/local/algs4] sudo wget http://algs4.cs.princeton.edu/linux/drjava.jar
@@ -89,7 +88,8 @@ Install the Java Platform, Standard Edition Development Kit (JDK 8), either from
 [username:/usr/local/algs4] sudo chgrp username ~/.drjava
 [username:/usr/local/algs4] sudo chown username ~/.drjava
 将.drjava文件的用户组和用户更改为你自己，我们下载.java的时候，将其所有属性复制了，如果不进行更改，使用drjava的时候，进行个性化设置的时候后出现IO错误！！！
- - Download Checkstyle 7.4 from checkstyle.zip; our Checkstyle configuration file from checkstyle-algs4.xml; and the Checkstyle wrapper script from from checkstyle-algs4，下载Checkstyle
+
+Download Checkstyle 7.4 from checkstyle.zip; our Checkstyle configuration file from checkstyle-algs4.xml; and the Checkstyle wrapper script from from checkstyle-algs4，下载Checkstyle
  
 
     [username:/usr/local/algs4/] sudo wget http://algs4.cs.princeton.edu/linux/checkstyle.zip
@@ -100,7 +100,8 @@ Install the Java Platform, Standard Edition Development Kit (JDK 8), either from
     [username:/usr/local/algs4/] sudo chmod 755 checkstyle-algs4
     [username:/usr/local/algs4/] sudo mv checkstyle-algs4 /usr/local/bin
 
- - Download Findbugs 3.0.1 from findbugs.zip; our Findbugs configuration file from findbugs.xml; and the Findbugs wrapper script from findbugs-algs4.下载findbugs.
+Download Findbugs 3.0.1 from findbugs.zip; our Findbugs configuration file from findbugs.xml; and the Findbugs wrapper script from findbugs-algs4.下载findbugs.
+
   
 
     [username:/usr/local/algs4/] sudo wget http://algs4.cs.princeton.edu/linux/findbugs.zip
@@ -110,11 +111,11 @@ Install the Java Platform, Standard Edition Development Kit (JDK 8), either from
     [username:/usr/local/algs4/] sudo chmod 755 findbugs-algs4
     [username:/usr/local/algs4/] sudo mv findbugs-algs4 /usr/local/bin
 
- - For these wrapper scripts to work, it is important that /usr/local/bin is in your PATH environment variable. This is very likely the case. If not, see the Troubleshooting section below.
-
+For these wrapper scripts to work, it is important that /usr/local/bin is in your PATH environment variable. This is very likely the case. If not, see the Troubleshooting section below.
 
 之后按照官方的教程熟悉如何使用drjava, algs4-javac, algs4-java, findbugs, checkstyle.
     
 
   [1]: http://algs4.cs.princeton.edu/linux/
   [2]: http://www.webupd8.org/2014/03/how-to-install-oracle-java-8-in-debian.html
+
