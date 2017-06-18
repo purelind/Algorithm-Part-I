@@ -72,23 +72,18 @@ public class FastCollinearPoints {
         checkPoints(points); 
         Point[] points2 = points.clone(); // do not change points
         Arrays.sort(points2); // sort points2 to natural order, compareTo()
-        Point[] pointsCopy = points2.clone();
            
         for (Point startPoint : points2) {
             // ArrayList to store point with the same slope to startPoint
             List<Point> pointsList = new ArrayList<Point>(); 
             pointsList.add(startPoint);
             
-            
+            Point[] pointsCopy = points2.clone();
             Arrays.sort(pointsCopy, startPoint.slopeOrder());
-            double slope = 0;
-            double preSlope = Double.NEGATIVE_INFINITY;
             
             for (int i = 1; i < pointsCopy.length; i++) { // ignore i=0 first point: startPoint
-                slope = startPoint.slopeTo(pointsCopy[i]);
-                if (slope == preSlope) { 
+                if (startPoint.slopeOrder().compare(pointsCopy[i], pointsCopy[i-1]) == 0) { 
                     pointsList.add(pointsCopy[i]);
-                    preSlope = slope;
                 }
                 else if (pointsList.size() >= 4) { // 4 or more points
                     addIfNew(pointsList, startPoint);
@@ -100,8 +95,7 @@ public class FastCollinearPoints {
                     pointsList.clear();
                     pointsList.add(startPoint);
                     pointsList.add(pointsCopy[i]);   
-                }
-                preSlope = slope;
+                } 
             }
             if (pointsList.size() >= 4) {
                 addIfNew(pointsList, startPoint);
