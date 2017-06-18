@@ -53,6 +53,7 @@
 import java.util.List;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Collections;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
@@ -79,7 +80,7 @@ public class FastCollinearPoints {
             pointsList.add(startPoint);
             
             Point[] pointsCopy = points2.clone();
-            Arrays.sort(pointsCopy, startPoint.slopeOrder());
+            Merge.sort(pointsCopy, startPoint.slopeOrder());
             
             for (int i = 1; i < pointsCopy.length; i++) { // ignore i=0 first point: startPoint
                 if (startPoint.slopeOrder().compare(pointsCopy[i], pointsCopy[i-1]) == 0) { 
@@ -157,14 +158,9 @@ public class FastCollinearPoints {
          * slope order, startPoint.compateTo(tesPointsList.get(1)) will find
          * whether b is the first number in natural order.
          */
-        for (int i = 0; i < testPointsList.size(); i++) {
-            if (startPoint.compareTo(testPointsList.get(i)) > 0) {
-                return;
-            } 
+        if (startPoint.compareTo(testPointsList.get(1)) > 0) {
+            return;
         }
-        // if (startPoint.compareTo(testPointsList.get(1)) > 0) {
-        //     return;
-        // }
         Collections.sort(testPointsList);
         alistSegment.add(new LineSegment(startPoint, testPointsList.get(testPointsList.size()-1)));       
     }
@@ -197,6 +193,75 @@ public class FastCollinearPoints {
         }
     }
     
+    private static class Merge {
+        // This class should not be instantiated.
+        private Merge() { }
+        
+        // stably merge a[lo .. mid] with a[mid+1 ..hi] using aux[lo .. hi]
+        private static void merge(Point[] a, Point[] aux, Comparator<Point> comparator, int lo, int mid, int hi) {
+            // precondition: a[lo .. mid] and a[mid+1 .. hi] are sorted subarrays
+            assert isSorted(a, comparator, lo, mid);
+            assert isSorted(a, comparator, mid+1, hi);
+            
+            // copy to aux[]
+            for (int k = lo; k <= hi; k++) {
+                aux[k] = a[k]; 
+            }
+            
+            // merge back to a[]
+            int i = lo, j = mid+1;
+            for (int k = lo; k <= hi; k++) {
+                if      (i > mid)              a[k] = aux[j++];
+                else if (j > hi)               a[k] = aux[i++];
+                else if (less(comparator, aux[j], aux[i])) a[k] = aux[j++];
+                else                           a[k] = aux[i++];
+            }
+            
+            // postcondition: a[lo .. hi] is sorted
+            assert isSorted(a, comparator, lo, hi);
+        }
+        // mergesort a[lo..hi] using auxiliary array aux[lo..hi]
+        private static void sort(Point[] a, Point[] aux, Comparator<Point> comparator, int lo, int hi) {
+            if (hi <= lo) return;
+            int mid = lo + (hi - lo) / 2;
+            sort(a, aux, comparator, lo, mid);
+            sort(a, aux, comparator, mid + 1, hi);
+            merge(a, aux, comparator, lo, mid, hi);
+        }
+        
+        /**
+         * Rearranges the array in ascending order, using the natural order.
+         * @param a the array to be sorted
+         */
+        public static void sort(Point[] a, Comparator<Point> comparator) {
+            Point[] aux = new Point[a.length];
+            sort(a, aux, comparator, 0, a.length-1);
+            assert isSorted(a, comparator);
+        }
+        
+        
+        /***************************************************************************
+          *  Helper sorting function.
+          ***************************************************************************/
+        
+        // is v < w ?
+        private static boolean less(Comparator<Point> c, Point v, Point w) {
+            return c.compare(v, w) < 0;
+        }
+        
+        /***************************************************************************
+          *  Check if array is sorted - useful for debugging.
+          ***************************************************************************/
+        private static boolean isSorted(Point[] a, Comparator<Point> comparator) {
+            return isSorted(a, comparator, 0, a.length - 1);
+        }
+        
+        private static boolean isSorted(Point[] a, Comparator<Point> comparator, int lo, int hi) {
+            for (int i = lo + 1; i <= hi; i++)
+                if (less(comparator, a[i], a[i-1])) return false;
+            return true;
+        }        
+    }
     
     /**
      * Sample client. This client program takes the name of an input file as a 
