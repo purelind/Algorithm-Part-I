@@ -22,8 +22,8 @@ ASSESSMENT DETAILS
 
 The following files were submitted:
 ----------------------------------
-6.4K Jun 25 14:51 Board.java
-5.8K Jun 25 14:51 Solver.java
+9.2K Jun 26 04:17 Board.java
+8.4K Jun 26 04:17 Solver.java
 
 
 ********************************************************************************
@@ -642,31 +642,31 @@ Test 1: measure CPU time and check for correctness
 
                filename   moves    n  seconds
 ---------------------------------------------
-=> passed  puzzle20.txt      20    3     0.02 
+=> passed  puzzle20.txt      20    3     0.01 
 => passed  puzzle22.txt      22    3     0.01 
 => passed  puzzle21.txt      21    3     0.01 
 => passed  puzzle23.txt      23    3     0.01 
 => passed  puzzle24.txt      24    3     0.01 
 => passed  puzzle25.txt      25    3     0.02 
-=> passed  puzzle27.txt      27    3     0.02 
-=> passed  puzzle29.txt      29    3     0.02 
-=> passed  puzzle26.txt      26    3     0.02 
-=> passed  puzzle28.txt      28    3     0.05 
-=> passed  puzzle30.txt      30    3     0.07 
-=> passed  puzzle31.txt      31    3     0.07 
-=> passed  puzzle39.txt      39    4     0.13 
-=> passed  puzzle41.txt      41    5     0.28 
-=> passed  puzzle34.txt      34    4     0.21 
-=> passed  puzzle37.txt      37    4     0.21 
-=> passed  puzzle44.txt      44    5     0.48 
-=> passed  puzzle32.txt      32    4     0.67 
-=> passed  puzzle35.txt      35    4     0.65 
-=> passed  puzzle33.txt      33    4     0.51 
-=> passed  puzzle43.txt      43    4     0.93 
-=> passed  puzzle46.txt      46    4     1.10 
-=> passed  puzzle40.txt      40    4     0.96 
-=> passed  puzzle36.txt      36    4     1.76 
-=> passed  puzzle45.txt      45    4     1.79 
+=> passed  puzzle27.txt      27    3     0.01 
+=> passed  puzzle29.txt      29    3     0.01 
+=> passed  puzzle26.txt      26    3     0.01 
+=> passed  puzzle28.txt      28    3     0.03 
+=> passed  puzzle30.txt      30    3     0.04 
+=> passed  puzzle31.txt      31    3     0.05 
+=> passed  puzzle39.txt      39    4     0.12 
+=> passed  puzzle41.txt      41    5     0.25 
+=> passed  puzzle34.txt      34    4     0.16 
+=> passed  puzzle37.txt      37    4     0.17 
+=> passed  puzzle44.txt      44    5     0.27 
+=> passed  puzzle32.txt      32    4     0.38 
+=> passed  puzzle35.txt      35    4     0.41 
+=> passed  puzzle33.txt      33    4     0.46 
+=> passed  puzzle43.txt      43    4     0.79 
+=> passed  puzzle46.txt      46    4     1.03 
+=> passed  puzzle40.txt      40    4     0.93 
+=> passed  puzzle36.txt      36    4     2.09 
+=> passed  puzzle45.txt      45    4     2.78 
 ==> 25/25 tests passed
 
 
@@ -806,4 +806,4 @@ Test 5: count Board operations (that should get called),
 Total: 125/125 tests passed!
 
 
-==============================================================
+================================================================
