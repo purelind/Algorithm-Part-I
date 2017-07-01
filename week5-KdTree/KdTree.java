@@ -4,12 +4,19 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdDraw;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class KdTree {
     private Node root;
+   // private List<Point2D> pointsInsideList = new ArrayList<Point2D>();
+    private double currentMinDistance;
+    private Point2D nearestPoint;
+    private int size;
     
     private static class Node {
-        private Point2D p;
-        private RectHV rect;
+        private final Point2D p;
+        private final RectHV rect;
         private Node lb;
         private Node rt;
         
@@ -21,25 +28,23 @@ public class KdTree {
         }
     }
     public KdTree() {
-
+        size = 0;
     }
     public boolean isEmpty() {
-        return size(root) == 0;
+        return size == 0;
     }   
     public int size() {
-        return size(root);
+        return size;
     }
-    private int size(Node x) {
-        if (x == null) {
-            return 0;
-        }
-        else {
-            return 1+size(x.rt)+size(x.lb);
-        }
-        
-    }
+
     public void insert(Point2D p) {
-       root = put(root, p, new RectHV(0.0, 0.0, 1.0, 1.0), 1);  
+        if (p == null) {
+            throw new IllegalArgumentException("");
+        }
+        if (!contains(p)) {
+            size++;
+            root = put(root, p, new RectHV(0.0, 0.0, 1.0, 1.0), 1);  
+        }
     }
     private Node put(Node parentPoint, Point2D newPoint, RectHV rect, int oritation) {
         if (parentPoint == null) {
@@ -56,9 +61,9 @@ public class KdTree {
             }
             if (cmp >= 0) {
                 RectHV currentRect = new RectHV(parentPoint.rect.xmin(),
-                                                parentPoint.rect.ymin(),
+                                                parentPoint.p.y(),
                                                 parentPoint.rect.xmax(),
-                                                parentPoint.p.y());                
+                                                parentPoint.rect.ymax());                
                 parentPoint.rt = put(parentPoint.rt, newPoint, currentRect, ++oritation);
             }
         }
@@ -82,7 +87,10 @@ public class KdTree {
         return parentPoint;
     }
     public boolean contains(Point2D p) {
-        return contains(root, p, 1);
+        if (p == null) {
+            throw new IllegalArgumentException("");
+        }        
+        return contains(root, p, 0);
     }
     private boolean contains(Node parentNode, Point2D searchPoint, int oritation) {
         if (parentNode == null) {
@@ -91,10 +99,10 @@ public class KdTree {
         if (oritation % 2 == 0) {
             double cmp = searchPoint.x() - (parentNode.p.x());
             if (cmp < 0) {
-                return contains(parentNode.lb, searchPoint, oritation++);
+                return contains(parentNode.lb, searchPoint, ++oritation);
             }
             else if (cmp > 0) {
-                return contains(parentNode.rt, searchPoint, oritation++);
+                return contains(parentNode.rt, searchPoint, ++oritation);
             }
             else {
                 return parentNode.p.equals(searchPoint);
@@ -103,10 +111,10 @@ public class KdTree {
         else {
             double cmp = searchPoint.y() - (parentNode.p.y());
             if (cmp < 0) {
-                return contains(parentNode.lb, searchPoint, oritation++);
+                return contains(parentNode.lb, searchPoint, ++oritation);
             }
             else if (cmp > 0) {
-                return contains(parentNode.rt, searchPoint, oritation++);
+                return contains(parentNode.rt, searchPoint, ++oritation);
             }
             else {
                 return parentNode.p.equals(searchPoint);
@@ -150,21 +158,73 @@ public class KdTree {
             }
         }
     }
-    /*public Iterable<Point2D> range(RectHV rect) {
-        
+    public Iterable<Point2D> range(RectHV rect) {
+        if (rect == null) {
+            throw new IllegalArgumentException("");
+        }
+        List<Point2D> pointsInsideList = new ArrayList<Point2D>();
+
+        findPointsInside(root, rect, pointsInsideList);
+
+        return pointsInsideList;
+    }
+    private void findPointsInside(Node currentNode, RectHV rangeRect, List<Point2D> pointsInsideList) {
+        if (currentNode != null && currentNode.rect.intersects(rangeRect)) {
+            if (rangeRect.contains(currentNode.p)) {
+                pointsInsideList.add(currentNode.p);
+            }
+            findPointsInside(currentNode.lb, rangeRect, pointsInsideList);
+            findPointsInside(currentNode.rt, rangeRect, pointsInsideList);
+        }
     }
     public Point2D nearest(Point2D p) {
-        
-    }*/
+        if (p == null) {
+            throw new IllegalArgumentException("");
+        }  
+        // double currentMinDistance = Double.POSITIVE_INFINITY;
+        // nearestPoint = new Point2D();
+        // Point2D nearestPoint;
+        // nearestPoint = new Point2D(0.0, 0.0);
+        currentMinDistance = Double.POSITIVE_INFINITY;
+        nearestPoint = root.p;
+        findNearestPoint(root, p);
+        return nearestPoint;
+    }
+    private void findNearestPoint(Node currentNode, Point2D quaryPoint) {
+        if (currentNode != null && currentNode.rect.distanceSquaredTo(quaryPoint) < currentMinDistance) {
+            double tempSquareDistance = currentNode.p.distanceSquaredTo(quaryPoint);
+            if (tempSquareDistance < currentMinDistance) {
+                currentMinDistance = tempSquareDistance;
+                nearestPoint = currentNode.p;
+            }
+            if (currentNode.lb != null && currentNode.lb.rect.contains(quaryPoint)) {
+                
+                findNearestPoint(currentNode.lb, quaryPoint);
+                findNearestPoint(currentNode.rt, quaryPoint);
+            }
+            else if (currentNode.rt != null &&currentNode.rt.rect.contains(quaryPoint)) {
+                findNearestPoint(currentNode.rt, quaryPoint);
+                findNearestPoint(currentNode.lb, quaryPoint);
+            }
+        }
+     }
+
+    
     
     public static void main(String[] args) {
 
         KdTree kd = new KdTree();
-        kd.insert(new Point2D(0.5, 0.5));
-        kd.insert(new Point2D(0.2, 0.2));
-        kd.insert(new Point2D(0.6, 0.5));
-        kd.insert(new Point2D(0.7, 0.4));
-        // StdOut.println(kd.contains(new Point2D(0.5, 0.4)));
-        kd.draw();
+        kd.insert(new Point2D(0.5, 0.1));
+        kd.insert(new Point2D(0.2, 0.8));
+        kd.insert(new Point2D(0.8, 0.8));
+        StdOut.println(kd.nearest(new Point2D(0.5, 0.8)));
+        StdOut.println(kd.size());
+        StdOut.println(kd.contains(new Point2D(0.5, 0.1)));
+        StdOut.println(kd.contains(new Point2D(0.5, 0.1)));
+        StdOut.println(kd.contains(new Point2D(0.2, 0.8)));
+        StdOut.println(kd.contains(new Point2D(0.8, 0.8)));
+        for (Point2D each : kd.range(new RectHV(0.0, 0.0, 1.0, 1.0))) {
+            StdOut.println(each);
+        }
     }
 }
