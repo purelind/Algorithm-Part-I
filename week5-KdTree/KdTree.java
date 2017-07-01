@@ -198,15 +198,15 @@ public class KdTree {
                 currentMinDistance = tempSquareDistance;
                 nearestPoint = currentNode.p;
             }
-            if (currentNode.lb != null && currentNode.lb.rect.contains(quaryPoint)) {
+            //if (currentNode.lb != null ) { // && currentNode.lb.rect.contains(quaryPoint
                 
                 findNearestPoint(currentNode.lb, quaryPoint);
                 findNearestPoint(currentNode.rt, quaryPoint);
-            }
-            else if (currentNode.rt != null &&currentNode.rt.rect.contains(quaryPoint)) {
-                findNearestPoint(currentNode.rt, quaryPoint);
-                findNearestPoint(currentNode.lb, quaryPoint);
-            }
+            //}
+            //if (currentNode.rt != null) {
+               // findNearestPoint(currentNode.rt, quaryPoint);
+               // findNearestPoint(currentNode.lb, quaryPoint);
+            //}
         }
      }
 
@@ -230,5 +230,7 @@ public class KdTree {
             StdOut.println(each);
         }
         StdOut.println(kd.size());
+        RectHV testRect = new RectHV(0.0, 0.0, 1.0, 1.0);
+        StdOut.println(testRect.distanceSquaredTo(new Point2D(1.0, 1.0)));
     }
 }
