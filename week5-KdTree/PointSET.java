@@ -25,10 +25,19 @@ public class PointSET {
         return size;
     }
     public void insert(Point2D p) {
-        set.add(p);
+        if (p == null) {
+            throw new IllegalArgumentException("");
+        }
+        if (!set.contains(p)) {
+            set.add(p);
+            size++;
+        }
     }
     public boolean contains(Point2D p) {
-        return   set.contains(p);
+        if (p == null) {
+            throw new IllegalArgumentException("");
+        }        
+        return set.contains(p);
     }
     public void draw() {
         StdDraw.setXscale();
@@ -48,6 +57,9 @@ public class PointSET {
             
     }
     public Iterable<Point2D> range(RectHV rect) {
+        if (rect == null) {
+            throw new IllegalArgumentException("");
+        }        
         List<Point2D> pointsInsideList = new ArrayList<Point2D>();
         /*while (setIter.hasNext()) {
             Point2D tempPoint = new Point2D();
@@ -86,6 +98,12 @@ public class PointSET {
             }
         }
         return nearestPoint;*/
+        if (p == null) {
+            throw new IllegalArgumentException("");
+        }
+        if (set.size() == 0) {
+            return null;
+        }
         Point2D nearestPoint = set.first();
         double minsquareDistance = squareDistance(p, set.first());
         double tempSquareDistance = 0.0;
