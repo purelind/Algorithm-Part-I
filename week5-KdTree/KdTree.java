@@ -43,45 +43,65 @@ public class KdTree {
         }
         if (!contains(p)) {
             size++;
-            root = put(root, p, new RectHV(0.0, 0.0, 1.0, 1.0), 1);  
+            if (root == null) {
+                root = new Node(p, new RectHV(0.0, 0.0, 1.0, 1.0));
+            }
+            else {
+                boolean lbORrt = false;
+                root = put(root, p, new RectHV(0.0, 0.0, 1.0, 1.0), root.p, lbORrt, 1); 
+            } 
         }
     }
-    private Node put(Node parentPoint, Point2D newPoint, RectHV rect, int oritation) {
-        if (parentPoint == null) {
-            return new Node(newPoint, rect);
+    private Node put(Node parentPoint, Point2D newPoint, RectHV rect, Point2D fatherPoint, boolean lbORrt, int oritation) {
+        //if (root == null) {
+         //   return Node(newPoint, rect)
+        //}
+        if (oritation % 2 == 0 && parentPoint == null && lbORrt) {
+            return new Node(newPoint, new RectHV(rect.xmin(), rect.ymin(), fatherPoint.x(), rect.ymax()));
         }
+        if (oritation % 2 == 0 && parentPoint == null && !lbORrt) {
+            return new Node(newPoint, new RectHV(fatherPoint.x(), rect.ymin(), rect.xmax(), rect.ymax()));
+        } 
+        if (oritation % 2 != 0 && parentPoint == null && lbORrt) {
+            return new Node(newPoint, new RectHV(rect.xmin(), rect.ymin(), rect.xmax(), fatherPoint.y()));
+        }
+        if (oritation % 2 != 0 && parentPoint == null && !lbORrt) {
+            return new Node(newPoint, new RectHV(rect.xmin(), fatherPoint.y(), rect.xmax(), rect.ymax()));
+        }
+        
         if (oritation % 2 == 0) {
             double cmp = newPoint.y() - (parentPoint.p.y());
             if (cmp < 0) {
-                RectHV currentRect = new RectHV(parentPoint.rect.xmin(),
+                /*RectHV currentRect = new RectHV(parentPoint.rect.xmin(),
                                                 parentPoint.rect.ymin(),
                                                 parentPoint.rect.xmax(),
-                                                parentPoint.p.y());
-                parentPoint.lb = put(parentPoint.lb, newPoint, currentRect, ++oritation);
+                                                parentPoint.p.y());*/
+                parentPoint.lb = put(parentPoint.lb, newPoint, parentPoint.rect, parentPoint.p, true, ++oritation);
             }
-            if (cmp >= 0) {
-                RectHV currentRect = new RectHV(parentPoint.rect.xmin(),
+            else {
+               /* RectHV currentRect = new RectHV(parentPoint.rect.xmin(),
                                                 parentPoint.p.y(),
                                                 parentPoint.rect.xmax(),
-                                                parentPoint.rect.ymax());                
-                parentPoint.rt = put(parentPoint.rt, newPoint, currentRect, ++oritation);
+                                                parentPoint.rect.ymax());*/                
+                parentPoint.rt = put(parentPoint.rt, newPoint, parentPoint.rect, parentPoint.p, false, ++oritation);
             }
         }
+    
         else {
             double cmp = newPoint.x() - (parentPoint.p.x());
             if (cmp < 0) {
-                RectHV currentRect = new RectHV(parentPoint.rect.xmin(),
+               /* RectHV currentRect = new RectHV(parentPoint.rect.xmin(),
                                                 parentPoint.rect.ymin(),
                                                 parentPoint.p.x(),
-                                                parentPoint.rect.ymax());                
-                parentPoint.lb = put(parentPoint.lb, newPoint, currentRect, ++oritation);
+                                                parentPoint.rect.ymax());*/                
+                parentPoint.lb = put(parentPoint.lb, newPoint, parentPoint.rect, parentPoint.p, true, ++oritation);
             }
-            if (cmp >= 0) {
-                RectHV currentRect = new RectHV(parentPoint.p.x(),
+            else {
+               /* RectHV currentRect = new RectHV(parentPoint.p.x(),
                                                 parentPoint.rect.ymin(),
                                                 parentPoint.rect.xmax(),
-                                                parentPoint.rect.ymax());                
-                parentPoint.rt = put(parentPoint.rt, newPoint, currentRect, ++oritation);
+                                                parentPoint.rect.ymax()); */               
+                parentPoint.rt = put(parentPoint.rt, newPoint, parentPoint.rect, parentPoint.p, false, ++oritation);
             }
         }
         return parentPoint;
@@ -164,7 +184,7 @@ public class KdTree {
             throw new IllegalArgumentException("");
         }
         List<Point2D> pointsInsideList = new ArrayList<Point2D>();
-
+  
         findPointsInside(root, rect, pointsInsideList);
 
         return pointsInsideList;
@@ -186,6 +206,9 @@ public class KdTree {
         // nearestPoint = new Point2D();
         // Point2D nearestPoint;
         // nearestPoint = new Point2D(0.0, 0.0);
+        if (root == null) {
+            return null;
+        }
         currentMinDistance = Double.POSITIVE_INFINITY;
         nearestPoint = root.p;
         findNearestPoint(root, p);
@@ -198,15 +221,20 @@ public class KdTree {
                 currentMinDistance = tempSquareDistance;
                 nearestPoint = currentNode.p;
             }
-            //if (currentNode.lb != null ) { // && currentNode.lb.rect.contains(quaryPoint
-                
+            if (currentNode.lb != null && currentNode.rt != null) { // && currentNode.lb.rect.contains(quaryPoint
+                if (currentNode.lb.rect.contains(quaryPoint)) {
+                    findNearestPoint(currentNode.lb, quaryPoint);
+                    findNearestPoint(currentNode.rt, quaryPoint);
+                }
+                else {
+                    findNearestPoint(currentNode.rt, quaryPoint);
+                    findNearestPoint(currentNode.lb, quaryPoint);
+                }
+            }
+            else {
                 findNearestPoint(currentNode.lb, quaryPoint);
                 findNearestPoint(currentNode.rt, quaryPoint);
-            //}
-            //if (currentNode.rt != null) {
-               // findNearestPoint(currentNode.rt, quaryPoint);
-               // findNearestPoint(currentNode.lb, quaryPoint);
-            //}
+            }
         }
      }
 
@@ -215,11 +243,12 @@ public class KdTree {
     public static void main(String[] args) {
 
         KdTree kd = new KdTree();
-        kd.insert(new Point2D(0.5, 0.1));
-        kd.insert(new Point2D(0.5, 0.1));
-        kd.insert(new Point2D(0.5, 0.2)); 
-        kd.insert(new Point2D(0.2, 0.8));
-        kd.insert(new Point2D(0.8, 0.8));
+        kd.insert(new Point2D(0.7, 0.2));
+        kd.insert(new Point2D(0.5, 0.4));
+        kd.insert(new Point2D(0.2, 0.3)); 
+        kd.insert(new Point2D(0.4, 0.7));
+        kd.insert(new Point2D(0.9, 0.6));
+        kd.draw();
         StdOut.println(kd.nearest(new Point2D(0.5, 0.8)));
         StdOut.println(kd.size());
         StdOut.println(kd.contains(new Point2D(0.5, 0.2)));
