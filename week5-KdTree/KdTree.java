@@ -97,28 +97,29 @@ public class KdTree {
             return false;
         }
         if (oritation % 2 == 0) {
+            if (parentNode.p.equals(searchPoint)) {
+                return true;
+            }
             double cmp = searchPoint.x() - (parentNode.p.x());
+            
             if (cmp < 0) {
                 return contains(parentNode.lb, searchPoint, ++oritation);
             }
-            else if (cmp > 0) {
+            else  {
                 return contains(parentNode.rt, searchPoint, ++oritation);
             }
-            else {
-                return parentNode.p.equals(searchPoint);
-            }
-        }
+        } 
         else {
+            if (parentNode.p.equals(searchPoint)) {
+                return true;
+            }
             double cmp = searchPoint.y() - (parentNode.p.y());
             if (cmp < 0) {
                 return contains(parentNode.lb, searchPoint, ++oritation);
             }
-            else if (cmp > 0) {
+            else  {
                 return contains(parentNode.rt, searchPoint, ++oritation);
             }
-            else {
-                return parentNode.p.equals(searchPoint);
-            } 
         }
     }
     public void draw() {
@@ -215,16 +216,19 @@ public class KdTree {
 
         KdTree kd = new KdTree();
         kd.insert(new Point2D(0.5, 0.1));
+        kd.insert(new Point2D(0.5, 0.1));
+        kd.insert(new Point2D(0.5, 0.2)); 
         kd.insert(new Point2D(0.2, 0.8));
         kd.insert(new Point2D(0.8, 0.8));
         StdOut.println(kd.nearest(new Point2D(0.5, 0.8)));
         StdOut.println(kd.size());
-        StdOut.println(kd.contains(new Point2D(0.5, 0.1)));
-        StdOut.println(kd.contains(new Point2D(0.5, 0.1)));
-        StdOut.println(kd.contains(new Point2D(0.2, 0.8)));
-        StdOut.println(kd.contains(new Point2D(0.8, 0.8)));
+        StdOut.println(kd.contains(new Point2D(0.5, 0.2)));
+        //StdOut.println(kd.contains(new Point2D(0.5, 0.1)));
+        //StdOut.println(kd.contains(new Point2D(0.2, 0.8)));
+        //StdOut.println(kd.contains(new Point2D(0.8, 0.8)));
         for (Point2D each : kd.range(new RectHV(0.0, 0.0, 1.0, 1.0))) {
             StdOut.println(each);
         }
+        StdOut.println(kd.size());
     }
 }
